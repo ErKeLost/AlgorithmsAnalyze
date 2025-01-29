@@ -76,3 +76,38 @@ function hashFunction(key: string, size: number) {
 console.log(hashFunction("apple", 10));
 console.log(hashFunction("banana", 10));
 console.log(hashFunction("cherry", 10)); 
+
+// 树结构
+
+// 树的优点
+// 1. 可以高效地存储和检索数据
+// 2. 可以高效地插入和删除数据
+
+// 什么叫二叉搜索树
+// 二叉搜索树是一种特殊的二叉树，它的每个节点都满足以下条件：
+// 1. 左子节点的值小于其父节点的值
+// 2. 右子节点的值大于其父节点的值
+// 3. 左右子树都是二叉搜索树
+
+
+// 二叉搜索树
+
+class TreeNode {
+    value: number;
+    left: TreeNode | null;
+    right: TreeNode | null;
+
+    constructor(value: number) {
+        this.value = value;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+class BSTree {
+    root: TreeNode | null;
+
+    constructor() {
+        this.root = null;
+    }
+}

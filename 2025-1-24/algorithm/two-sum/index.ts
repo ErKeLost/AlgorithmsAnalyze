@@ -118,9 +118,10 @@ function bubbleSort(nums: number[]) {
   }
   return nums
 }
-console.log(bubbleSort([10, 2, 3, 4, 5]));
+// console.log(bubbleSort([10, 2, 3, 4, 5]));
 
 // 因为每次排序可以拿到最大值 所以我们 每次就要减少排序的元素 而且本来为了越界就要剪去1 所以
 
 // 第二层循环就是 j < nums.length - i - 1
+
 
