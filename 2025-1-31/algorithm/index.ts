@@ -267,3 +267,79 @@ function fib(n) {
 
 console.log(fib(10));
 
+function fib2(n) {
+  const dp = [0, 1]
+  for (let i = 2; i <= n; i++) {
+    dp[i] = dp[i - 1] + dp[i - 2]
+  }
+  return dp[n]
+}
+
+console.log(fib2(100));
+
+// 状态转移方程
+
+function fib3(n) {
+  let prev = 0, curr = 1
+
+  for(let i = 2; i <=n; i++) {
+    const newValue = prev + curr
+    prev = curr
+    curr = newValue
+  }
+  return curr
+}
+
+console.log(fib3(10));
+
+
+
+function jump(n) {
+  if (n <= 1) return 1
+
+  return jump(n - 1) + jump(n - 2)
+}
+
+console.log(jump(4));
+
+// 状态转移方程
+
+function jump2(n) {
+  const dp = [1, 1]
+  for (let i = 2; i <= n; i++) {
+    dp[i] = dp[i - 1] + dp[i - 2]
+  }
+  return dp[n]
+}
+
+
+// 记忆化递归
+
+function jump3(n, memo = {}) {
+  if (n <= 1) return 1
+  if (memo[n]) return memo[n]
+
+  memo[n] = jump3(n - 1, memo) + jump3(n - 2, memo)
+  return memo[n]
+}
+
+// 压缩
+
+function jump4(n) {
+  let prev = 1, curr = 1
+
+  for (let i = 2; i <= n; i++) {
+    const newValue = prev + curr
+    prev = curr
+    curr = newValue
+  }
+  return curr
+}
+
+console.log(jump4(4));
+
+
+// 买卖股票最佳时机
+
+
+// 最大子数组和
