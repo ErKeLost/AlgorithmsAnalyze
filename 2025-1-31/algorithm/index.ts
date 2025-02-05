@@ -440,54 +440,111 @@ console.log(res4);
 // 找数组最大的第k个元素
 
 function findKthLargest(nums, k) {
+  // 冒泡排序
+  for (let i = 0; i < nums.length; i++) {
+    // 修正1: 使用j++
+    // 修正2: j从i+1开始，避免重复比较
+    for (let j = i + 1; j < nums.length; j++) {
+      // 修正3: 改为降序排序（因为要找第k大）
+      if (nums[i] < nums[j]) {  // 注意比较符号改变
+        [nums[i], nums[j]] = [nums[j], nums[i]]
+      }
+    }
+  }
+
+  // 修正4: 返回第k大的元素
+  return nums
+}
+const res5 = findKthLargest([3, 2, 1, 5, 6, 4], 2)
+console.log(res5);
+
+function findKthLargest2(nums, k) {
   // 将第k大转换为第n-k+1小
-  // 因为第2大元素就是倒数第2个位置的元素
   k = nums.length - k + 1;
 
   return quickSelect(nums, 0, nums.length - 1, k);
 }
 
 function quickSelect(nums, left, right, k) {
-  // 1. 选择基准值（pivot）
-  const pivot = partition2(nums, left, right);
+  // 获取分区点
+  const pivotIndex = partition2(nums, left, right);
 
-  // 2. 比较pivot的位置与k的关系
-  if (pivot === k - 1) {
-    // 找到了第k小的元素
-    return nums[pivot];
-  } if (pivot > k - 1) {
-    // 第k小的元素在左边
-    return quickSelect(nums, left, pivot - 1, k);
+  // 根据分区点的位置判断
+  if (pivotIndex === k - 1) {
+    return nums[pivotIndex];
+  } else if (pivotIndex > k - 1) {
+    return quickSelect(nums, left, pivotIndex - 1, k);
+  } else {
+    return quickSelect(nums, pivotIndex + 1, right, k);
   }
-  // 第k小的元素在右边
-  return quickSelect(nums, pivot + 1, right, k);
 }
 
 function partition2(nums, left, right) {
-  // 1. 选择最右边的元素作为基准值
-  const pivot = nums[right];
+  // 随机选择pivot，优化性能
+  const randomIndex = left + Math.floor(Math.random() * (right - left + 1));
+  [nums[right], nums[randomIndex]] = [nums[randomIndex], nums[right]];
 
-  // 2. i表示小于pivot的元素应该放置的位置
+  const pivot = nums[right];
   let i = left;
 
-  // 3. 遍历数组，将小于pivot的元素放到左边
   for (let j = left; j < right; j++) {
     if (nums[j] < pivot) {
-      // 交换元素
       [nums[i], nums[j]] = [nums[j], nums[i]];
       i++;
     }
   }
 
-  // 4. 将pivot放到正确的位置
   [nums[i], nums[right]] = [nums[right], nums[i]];
-
   return i;
 }
 
-const res5 = findKthLargest([3, 2, 1, 5, 6, 4], 1)
-console.log(res5);
+const res6 = findKthLargest2([3, 2, 1, 5, 6, 4], 2)
+console.log(res6);
 
 
-// 最长递增子序列
+function findLongestSequence(nums) {
+  // 1. 创建一个Set，方便快速查找数字
+  const numSet = new Set(nums);
 
+  // 2. 记录最长序列的长度
+  let maxLength = 0;
+
+  // 3. 遍历每个数字
+  for (const num of numSet) {
+    // 4. 如果这个数字是序列的开始（它的前面没有数字）
+    if (!numSet.has(num - 1)) {
+      let currentNum = num;
+      let currentLength = 1;
+
+      // 5. 往后找连续的数字
+      while (numSet.has(currentNum + 1)) {
+        currentNum = currentNum + 1;  // 继续找下一个数
+        currentLength = currentLength + 1;  // 长度加1
+      }
+
+      // 6. 更新最大长度
+      if (currentLength > maxLength) {
+        maxLength = currentLength;
+      }
+    }
+  }
+
+  return maxLength;
+}
+
+
+function fib0(n) {
+  if (n === 0) return 0;
+  if (n === 1) return 1;
+  let prev = 0;
+  let curr = 1;
+
+  for (let i = 2; i <= n; i++) {
+    const newValue = prev + curr
+    prev = curr
+    curr = newValue
+  }
+  return curr
+}
+
+console.log(fib0(10));
