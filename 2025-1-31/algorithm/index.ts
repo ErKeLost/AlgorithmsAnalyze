@@ -252,7 +252,7 @@ console.log(res);
 
 function nextPermutation(nums) {
   const n = nums.length
-  
+
 }
 
 
@@ -282,7 +282,7 @@ console.log(fib2(100));
 function fib3(n) {
   let prev = 0, curr = 1
 
-  for(let i = 2; i <=n; i++) {
+  for (let i = 2; i <= n; i++) {
     const newValue = prev + curr
     prev = curr
     curr = newValue
@@ -343,3 +343,151 @@ console.log(jump4(4));
 
 
 // 最大子数组和
+
+
+// 最长重复子数组
+function findLength(nums1, nums2) {
+  const m = nums1.length
+  const n = nums2.length
+  // 创建 dp 数组
+  const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0))
+
+  let maxLength = 0;
+
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (nums1[i - 1] === nums2[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1] + 1;
+        maxLength = Math.max(maxLength, dp[i][j]);
+      }
+    }
+  }
+
+  return maxLength
+}
+
+const res3 = findLength([1, 2, 3, 2, 1, 4], [3, 2, 1, 4, 7])
+console.log(res3);
+
+
+// 长度最小的子数组
+
+function minSubArrayLen(target, nums) {
+  // 定义窗口的左右边界
+  let left = 0;
+  let right = 0;
+  let sum = 0;  // 当前窗口内的和
+  let minLen = Infinity;  // 最小长度，初始化为无穷大
+
+  while (right < nums.length) {
+    // 1. 扩大窗口
+    sum += nums[right];
+
+    // 2. 当和大于等于目标值时，尝试收缩窗口
+    while (sum >= target) {
+      // 更新最小长度
+      minLen = Math.min(minLen, right - left + 1);
+      // 收缩窗口
+      sum -= nums[left];
+      left++;
+    }
+
+    right++;
+  }
+
+  // 如果minLen仍然是Infinity，说明没找到符合条件的子数组
+  return minLen === Infinity ? 0 : minLen;
+}
+
+
+// 分割回文串
+function partition(s) {
+  const result = [];
+  const path = [];
+
+  function isPalindrome(str, left, right) {
+    while (left < right) {
+      if (str[left] !== str[right]) return false
+      left++
+      right--
+    }
+    return true
+  }
+  function backtrack(startIndex) {
+    if (startIndex >= s.length) {
+      result.push([...path])
+      return;
+    }
+
+    for (let i = startIndex; i < s.length; i++) {
+      if (isPalindrome(s, startIndex, i)) {
+        path.push(s.slice(startIndex, i + 1))
+        backtrack(i + 1)
+        path.pop()
+      }
+    }
+  }
+
+  backtrack(0)
+  return result
+}
+
+const res4 = partition("aab")
+console.log(res4);
+
+
+
+// 找数组最大的第k个元素
+
+function findKthLargest(nums, k) {
+  // 将第k大转换为第n-k+1小
+  // 因为第2大元素就是倒数第2个位置的元素
+  k = nums.length - k + 1;
+
+  return quickSelect(nums, 0, nums.length - 1, k);
+}
+
+function quickSelect(nums, left, right, k) {
+  // 1. 选择基准值（pivot）
+  const pivot = partition2(nums, left, right);
+
+  // 2. 比较pivot的位置与k的关系
+  if (pivot === k - 1) {
+    // 找到了第k小的元素
+    return nums[pivot];
+  } if (pivot > k - 1) {
+    // 第k小的元素在左边
+    return quickSelect(nums, left, pivot - 1, k);
+  }
+  // 第k小的元素在右边
+  return quickSelect(nums, pivot + 1, right, k);
+}
+
+function partition2(nums, left, right) {
+  // 1. 选择最右边的元素作为基准值
+  const pivot = nums[right];
+
+  // 2. i表示小于pivot的元素应该放置的位置
+  let i = left;
+
+  // 3. 遍历数组，将小于pivot的元素放到左边
+  for (let j = left; j < right; j++) {
+    if (nums[j] < pivot) {
+      // 交换元素
+      [nums[i], nums[j]] = [nums[j], nums[i]];
+      i++;
+    }
+  }
+
+  // 4. 将pivot放到正确的位置
+  [nums[i], nums[right]] = [nums[right], nums[i]];
+
+  return i;
+}
+
+const res5 = findKthLargest([3, 2, 1, 5, 6, 4], 1)
+console.log(res5);
+
+
+// 最长递增子序列
+
