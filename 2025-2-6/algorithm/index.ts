@@ -310,3 +310,175 @@ bst.invertTree();
 
 bst.print();
 
+
+
+// 设计链表 leetcode #707
+
+class Node2 {
+  constructor(value) {
+    this.value = value
+    this.next = null
+  }
+}
+
+class MyLinkedList {
+  constructor() {
+    this.head = null
+    this.size = 0
+  }
+
+  get(index: number): number {
+    let current = this.head
+    let count = 0
+    while (current) {
+      current = current.next
+      if (count === index) {
+        return current.value
+      }
+    }
+
+    return -1
+  }
+
+  addAtHead(val: number): void {
+    const newNode = new Node2(val)
+
+    if (!this.head) {
+      this.head = newNode
+      this.size++
+      return
+    }
+    const current = this.head
+    this.head = newNode
+    newNode.next = current
+    this.size++
+
+
+    // newNode.next = this.head;
+    // this.head = newNode;
+  }
+
+  addAtTail(val: number): void {
+    const newNode = new Node2(val)
+    if (!this.head) {
+      this.head = newNode
+      this.size++
+      return
+    }
+
+    let current = this.head
+    while (current.next) {
+      current = current.next
+    }
+    current.next = newNode
+    this.size++
+  }
+
+  addAtIndex(index: number, val: number): void {
+    if (index < 0 || index > this.size) {
+      throw new Error("append 索引越界")
+    }
+
+    if (index === 0) {
+      this.addAtHead(val)
+      return
+    }
+
+    const newNode = new Node2(val)
+
+    let current = this.head
+
+    let prev = null
+
+    let count = 0
+    while (count < index) {
+      prev = current
+      current = current.next
+      count++
+    }
+
+    prev.next = newNode
+    newNode.next = current
+    this.size++
+  }
+
+  deleteAtIndex(index: number): void {
+    if (index < 0 || index >= this.size) {
+      throw new Error("删除索引越界")
+    }
+
+    let current = this.head
+    if (index === 0) {
+      this.head = current.next
+    } else {
+      let prev = null
+      let count = 0
+      while (count < index) {
+        prev = current
+        current = current.next
+        count++
+      }
+      prev.next = current.next
+    }
+    this.size--
+  }
+}
+
+
+var reverseList = function (head) {
+  let prev = null
+  let curr = head
+
+  while (curr) {
+    let next = curr.next
+
+    curr.next = prev
+
+    prev = curr
+    curr = next
+  }
+
+  return prev
+}
+
+
+var reverseBetween = function (head, left, right) {
+  if (!head || !head.next) return head
+
+  //为了统一处理 “如果 left=1（反转从头节点开始）该怎么办？” 这种特殊情况，我们通常会先 添加一个虚拟头节点 dummy，
+  // 让它指向真正的头节点。这样，无论 left 是否为1，都能用统一的方式处理。
+
+  const dummy = new Node2(0)
+  dummy.next = head
+
+  // 第一步 找到反转区间的前一个节点 pre
+  // 走 left - 1 步，因为 pre 要停在 left - 1 个节点位置 
+  let pre = dummy
+  // 走到 left 节点
+  for (let i = 0; i < left -1; i++) {
+    pre = pre.next
+  }
+
+  // 第二步 开始反转区间
+  let curr = pre.next;
+  let prev = null; // 用来反转指针的
+
+  // 循环次数：right - left + 1（就是要反转的节点数）
+  for (let i = 0; i < right - left + 1; i++) {
+    let next = curr.next; // 保存当前节点的下一个节点
+    curr.next = prev;     // 改变指向，让 curr 指向 prev
+    prev = curr;          // prev 前移到 curr
+    curr = next;          // curr 前移到 next
+  }
+
+  // 第三步：连接反转后的部分
+  //，现在 prev 指向了反转后的“区间第一节点”
+  //，而 pre.next 指向反转前区间的“第一节点”，它现在成了区间的最后一个节点
+
+    // pre.next 是反转前的 left 节点，反转后它跑到区间尾部，所以它的 next 应该连接区间后面的节点 curr
+    pre.next.next = curr;
+    // pre.next 本来是指向原先的 left 节点，现在要让它指向反转后的第一节点 prev
+    pre.next = prev;
+
+    return dummy.next
+}
