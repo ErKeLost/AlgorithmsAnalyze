@@ -254,5 +254,59 @@ class BinarySearchTree {
     this.root = removeNode(this.root, value)
   }
 
+
+  print() {
+    const printNode = (node, prefix = '', isLeft = true) => {
+      if (!node) return;
+
+      console.log(
+        prefix + (isLeft ? '├── ' : '└── ') + node.value
+      );
+
+      printNode(node.left, prefix + (isLeft ? '│   ' : '    '), true);
+      printNode(node.right, prefix + (isLeft ? '│   ' : '    '), false);
+    };
+
+    if (this.root) {
+      console.log(this.root.value);
+      printNode(this.root.left, '', true);
+      printNode(this.root.right, '', false);
+    }
+  }
+
   // 反转二叉树
+  invertTree() {
+    const invert = (node) => {
+      if (!node) return null
+
+      // 保存左右子树的引用
+      const left = node.left
+      const right = node.right
+
+      node.left = invert(right)
+      node.right = invert(left)
+
+      return node
+    }
+    const node = invert(this.root)
+    return node
+  }
 }
+
+const bst = new BinarySearchTree();
+
+// 插入一些节点
+bst.insert(4);
+bst.insert(2);
+bst.insert(7);
+bst.insert(1);
+bst.insert(3);
+bst.insert(6);
+bst.insert(9);
+
+bst.print();
+
+bst.invertTree();
+
+bst.print();
+
