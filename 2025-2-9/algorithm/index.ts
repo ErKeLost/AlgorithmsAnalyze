@@ -289,3 +289,198 @@ const bst = new BinarySearchTree();
 [10, 5, 15, 3, 7, 12, 18].forEach(val => bst.insert(val));
 console.log(bst);
 console.log(bst.inorder());
+
+// 图
+
+class graph {
+  constructor() {
+    this.adjacencyList = new Map()
+  }
+
+  addVertex(vertex) {
+    if (!this.addVertex.has(vertex)) {
+      this.addVertex.set(vertex, [])
+    }
+  }
+  // v 起点 w 终点 undirected 是否为无相边
+  addEdge(v, w) {
+    this.addVertex(v)
+    this.addVertex(w)
+    this.adjacencyList.get(v)!.push(w)
+    if (undirected) {
+      this.adjacencyList.get(w)!.push(v)
+    }
+  }
+
+  // 广度优先搜索 bfs
+  bfs(start) {
+    const visited = new Set()
+    const queue = [start]
+    const result = []
+
+    while (queue.length) {
+      const vertex = queue.shift()
+      if (!visited.has(vertex)) {
+        visited.add(vertex)
+        result.push(vertex)
+
+        const neighbors = this.adjacencyList.get(vertex)
+        if (neighbors) {
+          for (const neighbor of neighbors) {
+            if (!visited.has(neighbor)) {
+              queue.push(neighbor)
+            }
+          }
+        }
+      }
+    }
+    return result
+  }
+
+  dfs(start) {
+    const visited = new Set()
+    const result = []
+    const dfsRecursive = vertex => {
+      if (visited.has(vertex)) return 
+      visited.add(vertex)
+      result.push(vertex)
+
+      const neighbors = this.adjacencyList.get(vertex)
+
+      if (neighbors) {
+        for (const neighbor of neighbors) {
+          if (!visited.has(neighbor)) {
+            dfsRecursive(neighbor)
+          }
+        }
+      }
+    }
+    dfsRecursive(start)
+
+    return result
+  }
+}
+
+// 二叉树最大深度
+
+function maxDeep(root) {
+  if (!root) return 0
+  const left = maxDeep(root.left)
+  const right = maxDeep(root.right)
+
+  return Math.max(left, right) + 1
+}
+
+
+// 反转二叉树
+function invertTree(root) {
+  // 递归终止：如果节点为空，则直接返回null
+  if (root === null) {
+    return null;
+  }
+  
+  // 以下代码用于交换当前节点的左右子树
+  const temp = root.left;  // 保存左子树，方便后续赋值
+  root.left = root.right;  // 将右子树赋给左子树
+  root.right = temp;       // 将原左子树赋给右子树
+  
+  // 递归调用：对左右子树继续进行翻转
+  invertTree(root.left);   // 翻转当前节点的左子树
+  invertTree(root.right);  // 翻转当前节点的右子树
+  
+  // 返回翻转后的当前节点
+  return root;
+}
+
+// 对称二叉树
+
+function isSymmetric(root) {
+  if (!root) return true
+  return isMirror(root.left, root.right)
+}
+
+function isMirror(left, right) {
+  if (left && right) return true
+  if (left || right) return false
+  return left.val === right && isMirror(left.left, right.right) && isMirror(left.right, right.left)
+}
+
+// 二叉树的直径
+function diameterOfBinaryTree(root) {
+  let maxDiameter = 0;  // 用于保存全局最大的直径
+
+  /**
+   * 辅助函数，计算以 node 作为根的树的深度
+   * @param {TreeNode|null} node 当前节点
+   * @return {number} 当前节点的深度（从 node 到最深叶子的边数）
+   */
+  function depth(node) {
+    if (node === null) return 0;  // 空节点的深度为 0
+
+    // 分别递归计算左右子树的深度
+    const left = depth(node.left);
+    const right = depth(node.right);
+
+    // 更新全局直径：
+    // 当前节点的直径候选值是左子树深度加上右子树深度
+    maxDiameter = Math.max(maxDiameter, left + right);
+
+    // 返回当前节点的深度：左右子树中较大的一个 + 1（当前节点与子节点之间的一条边）
+    return Math.max(left, right) + 1;
+  }
+
+  depth(root);
+  return maxDiameter;
+}
+
+// 层序遍历
+
+function levelOrder(root) {
+  const result = [];
+  if (!root) return result;
+  const queue = [root];
+
+  // 当队列不为空时，表示还有层需要遍历
+  while (queue.length > 0) {
+    const levelSize = queue.length; // 当前层节点数
+    const levelNodes = [];          // 保存当前层所有节点的值
+
+    // 遍历当前层所有节点
+    for (let i = 0; i < levelSize; i++) {
+      const current = queue.shift();
+      levelNodes.push(current.val);
+
+      // 如果有左子节点，则加入队列
+      if (current.left) {
+        queue.push(current.left);
+      }
+
+      // 如果有右子节点，则加入队列
+      if (current.right) {
+        queue.push(current.right);
+      }
+    }
+
+    // 将当前层的节点值添加到结果中
+    result.push(levelNodes);
+  }
+
+  return result;
+}
+
+// 有序数组转换成平衡二叉搜索树
+function sortedArrayToBST(nums: number[]): TreeNode | null {
+  if (nums.length === 0) {
+    return null;
+  }
+  
+  // 选择中间元素作为根节点
+  const mid = Math.floor(nums.length / 2);
+  const root = new TreeNode(nums[mid]);
+  
+  // 递归构造左子树、右子树
+  root.left = sortedArrayToBST(nums.slice(0, mid));
+  root.right = sortedArrayToBST(nums.slice(mid + 1));
+  
+  return root;
+}
